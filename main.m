@@ -6,20 +6,27 @@ sepia_dir = '/data/hu_faengstroem/Scripts/QSM_analysis/sepia/';
 
 cd( QSM_dir )
 
-subject_list =[109];
+subject_list = [50];
 
 % Select certain files from the directory
-% Load them into a variable
+
+sub_dir = sprintf([QSM_dir, 'sub-%s', '/other/'], sprintf('050'));
+sub_magn_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_INV1_PHS*', '00005*', 'nii'] ) );
+sub_phase_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_UNI_DEN*', '00005*', 'nii'] ) );
+
+% Load sepia path and necessary scripts
+addpath( genpath( sepia_dir ) );
+sepia_addpath
 
 % Get the magnitude file
-inputMagnNifti = load_untouch_nii();
-magn = load_nii_img_only();
+inputMagnNifti = load_untouch_nii( fullfile( sub_dir, sub_magn_file ) );
+magn = load_nii_img_only( fullfile( sub_dir, sub_magn_file ) );
 isMagnLoad = true;
 disp('Magnitude data is loaded.');
 
 % Get the phase file
-inputPhaseNifti = load_untouch_nii();
-fieldMap = load_nii_img_only();
+inputPhaseNifti = load_untouch_nii( fullfile( sub_dir, sub_phase_file) );
+fieldMap = load_nii_img_only( fullfile( sub_dir, sub_phase_file) );
 
 if max(fieldMap(:))>4 || min(fieldMap(:))<-4
 	disp('Converting phase data from DICOM image value to radian unit...')
