@@ -3,8 +3,8 @@ clear all;
 
 % Initiate variables
 QSM_dir =  '/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/';%'/data/pt_01923/TmpOut/QSM/';
-data_dir = '/data/p_01923/';
-output_dir = '/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/test_out/';
+data_dir = '/data/pt_01923/TmpOut/final_script/Nifti/';
+output_dir = '/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/test_out_2/';
 sepia_dir = '/data/hu_faengstroem/Scripts/QSM_analysis/sepia/';
 
 cd( QSM_dir )
@@ -13,7 +13,7 @@ subject_list = [50];
 
 % Select certain files from the directory
 
-sub_dir = sprintf([QSM_dir, 'sub-%s', '/other/'], sprintf('050'));
+sub_dir = sprintf([data_dir, 'sub-%s', '/ses-1/other/'], sprintf('050'));
 sub_magn_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_INV1_PHS*', '00005*', 'nii'] ) );
 sub_phase_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_UNI_DEN*', '00005*', 'nii'] ) );
 
