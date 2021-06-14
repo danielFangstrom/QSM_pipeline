@@ -11,11 +11,14 @@ sepia_dir = '/data/hu_faengstroem/Scripts/QSM_analysis/sepia/';
 
 cd( QSM_dir )
 
+% sepia_addpath('bet');
+% call_fsl_dir = '/afs/cbs.mpg.de/software/fsl/6.0.3/ubuntu-bionic-amd64/etc/matlab/';
+
 subject_list = [31];
 
 % iterations_of_parameters = 5;
 
-lambda_values = [0.05, 0.1, 0.15, 0.2, 0.25 ];
+lambda_values = [0.03, 0.04, 0.05, 0.06, 0.07 ];
 
 for isub = 1:length( subject_list )
 
@@ -24,11 +27,24 @@ for isub = 1:length( subject_list )
     output_dir = strcat( output_main_dir, sprintf( '%03d', subject ), '/' );
 
     sub_dir = sprintf([data_dir, 'sub-%s', '/ses-1/other/'], sprintf( '%03d', subject ));
-    sub_magn_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_INV1_PHS*', '00005*', 'nii'] ) );
-    sub_phase_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_UNI_DEN*', '00005*', 'nii'] ) );
+    sub_phase_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_INV2_PHS*', '00005*', 'nii'] ) );
+    sub_magn_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_UNI_DEN*', '00005*', 'nii'] ) );
 
     % Select the sepia header
     sepia_header = fullfile( QSM_dir, 'sepia_header.mat' );  %'sub_050_INV2_5_BET_mask/sepia_header.mat');
+    
+    % Create the brain mask by using BET
+    % Easy way: use BET with f = 0.55 and g = -0.35
+    % mask = BET(magn(:,:,:,1),matrixSize,voxelSize);
+    % If/When that doesn't work, note down all subjects that
+    % produce funky results and go through them manually.
+    % If there are too many funky ones, consider creating a mask for each
+    % participant. Dynamically creating a good mask for each participant is
+    % most likely too much work.
+    sub_mask_file = dir( fullfile( strcat( output_main_dir, 'Masks/' ) , ...
+        ['*', sprintf( '%03d', subject ), '*mask.nii.gz'] ) );
+    
+    mask = strcat( sub_mask_file.folder, '/', sub_mask_file.name);
     
     for ival = 1:length( lambda_values )
         
@@ -50,10 +66,9 @@ for isub = 1:length( subject_list )
         background_field_removal_params = struct(...
             'refine', 1,...
             'erode_radius', 0,...
-            'method', 'lbv',...
-            'tol', 0.0100,...
-            'depth', 5,...
-            'peel', 2 ...
+            'method', 'resharp',...
+            'radius', 4,...
+            'alpha', 0.01 ...
             );
         qsm_params = struct(...
             'method', 'ilsqr',...
@@ -77,12 +92,14 @@ for isub = 1:length( subject_list )
             'name', {...
             strcat( sub_phase_file.folder, '/', sub_phase_file.name),...
             strcat( sub_magn_file.folder, '/', sub_magn_file.name),...
-            '',...
+            '', ...
             sepia_header ...
             } );
 
-        SepiaIOWrapper( input_struct, sublevel_output_dir, '', algorParams );
+        SepiaIOWrapper( input_struct, sublevel_output_dir, mask, algorParams );
         
+        % Create log-file
+        log_file = WriteLogFileQSM( input_struct, sublevel_output_dir, mask, algorParams );
     end
     
 end
