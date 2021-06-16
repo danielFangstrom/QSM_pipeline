@@ -10,6 +10,15 @@ if exist(log_file_name,'file') == 2
 end
 fid = fopen(log_file_name,'w');
 
+if isfield( algorParams, 'error' )
+    fprintf(fid,'The script encountered an error: ''%s'' ;\n\n\n', algorParams.error.message);
+    % fprintf(fid,'Cause: ''%s'' ;\n', algorParams.error.cause);
+    for i = 1:length( algorParams.error.stack )
+        fprintf(fid,'Error in ''%s'' ;\n', algorParams.error.stack(i).file );
+        fprintf(fid,'In line ''%s'' ;\n', algorParams.error.stack(i).line );
+    end
+    fprintf(fid,'\n\n\n');
+end
 
 % Input data
 if isstruct(input_struct)

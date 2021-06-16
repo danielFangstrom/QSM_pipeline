@@ -14,11 +14,11 @@ cd( QSM_dir )
 % sepia_addpath('bet');
 % call_fsl_dir = '/afs/cbs.mpg.de/software/fsl/6.0.3/ubuntu-bionic-amd64/etc/matlab/';
 
-subject_list = [31];
+subject_list = [26:30, 33:34, 36, 38:40];
 
 % iterations_of_parameters = 5;
 
-lambda_values = [0.03, 0.04, 0.05, 0.06, 0.07 ];
+lambda_values = [0.06]; %[0.03, 0.04, 0.06, 0.07 ];
 
 for isub = 1:length( subject_list )
 
@@ -49,7 +49,7 @@ for isub = 1:length( subject_list )
     for ival = 1:length( lambda_values )
         
         lambda = lambda_values( ival );
-        sublevel_output_dir = strcat( output_dir, sprintf( '%03d', lambda ), '/' );
+        sublevel_output_dir = strcat( output_dir, 'ilsqr_lambda_', sprintf( '%03d', lambda ), '/' );
 
         % Initialize the algorithm parameters
         general_params = struct(...
@@ -96,10 +96,17 @@ for isub = 1:length( subject_list )
             sepia_header ...
             } );
 
-        SepiaIOWrapper( input_struct, sublevel_output_dir, mask, algorParams );
+        try
+            SepiaIOWrapper( input_struct, sublevel_output_dir, mask, algorParams );
         
-        % Create log-file
-        log_file = WriteLogFileQSM( input_struct, sublevel_output_dir, mask, algorParams );
+            % Create log-file
+            log_file = WriteLogFileQSM( input_struct, sublevel_output_dir, mask, algorParams );
+            
+        catch SepiaException
+            algorParams.error = SepiaException;
+            % Create log-file with the error
+            log_file = WriteLogFileQSM( input_struct, sublevel_output_dir, mask, algorParams );
+        end
     end
     
 end
