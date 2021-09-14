@@ -1,5 +1,8 @@
 function log_file_name = WriteLogFileQSM( input_struct, subject_output_dir, mask_name, algorParams )
 log_file_name = [subject_output_dir filesep 'QSM_pipeline_log.m'];
+if exist( subject_output_dir, 'dir' ) ~= 7
+    mkdir( subject_output_dir )
+end
 if exist(log_file_name,'file') == 2
     counter = 1;
     while exist(log_file_name,'file') == 2
@@ -11,7 +14,8 @@ end
 fid = fopen(log_file_name,'w');
 
 if isfield( algorParams, 'error' )
-    fprintf(fid,'The script encountered an error: ''%s'' ;\n\n\n', algorParams.error.message);
+    fprintf( fid, 'The script encountered an error: ''%s'' in %s line %d;\n\n\n', ...
+        algorParams.error.message, algorParams.error.stack(1,1).name, algorParams.error.stack(1,1).line);
     % fprintf(fid,'Cause: ''%s'' ;\n', algorParams.error.cause);
     for i = 1:length( algorParams.error.stack )
         fprintf(fid,'Error in ''%s'' ;\n', algorParams.error.stack(i).file );
@@ -65,16 +69,15 @@ fprintf(fid,'algorParam.bfr.lambda = %i ;\n', ...
 % QSM parameters
 fprintf(fid,'%% QSM algorithm parameters\n');
 
-fprintf(fid,'algorParam.qsm.method = ''%s'' ;\n', ...
-    algorParams.qsm.method);
-fprintf(fid,'algorParam.qsm.tol = %i ;\n', ...
-    algorParams.qsm.tol);
-fprintf(fid,'algorParam.qsm.maxiter = %i ;\n', ...
-    algorParams.qsm.maxiter);
-fprintf(fid,'algorParam.qsm.lambda = %i ;\n', ...
-    algorParams.qsm.lambda);
-fprintf(fid,'algorParam.qsm.optimise = %i ;\n', ...
-    algorParams.qsm.optimise);
+QSM_fieldnames = fieldnames( algorParams.qsm );
+for i = 1:size( struct2table( algorParams.qsm  ), 2 )
+    current_value = algorParams.qsm.( QSM_fieldnames{ i } );
+    if isnumeric( current_value )
+        fprintf( fid, '%s = %d', QSM_fieldnames{ i }, algorParams.qsm.( QSM_fieldnames{ i } ) );
+    else
+        fprintf( fid, '%s = %s', QSM_fieldnames{ i }, algorParams.qsm.( QSM_fieldnames{ i } ) );
+    end
+end
 
 fclose(fid);
 
