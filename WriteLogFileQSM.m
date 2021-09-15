@@ -41,30 +41,30 @@ fprintf(fid,'mask_filename = [''%s''] ;\n\n',mask_name);
 fprintf(fid,'subject_output_dir = [''%s''] ;\n\n',subject_output_dir);
 
 % Phase unwrapping parameters
+fprintf(fid,'%% Phase unwrapping algorithm parameters\n');
 
-fprintf(fid,'algorParam.unwrap.unwrapMethod = ''%s'' ;\n', ...
-    algorParams.unwrap.unwrapMethod );
-fprintf(fid,'algorParam.unwrap.echoCombMethod = ''%s'' ;\n', ...
-    algorParams.unwrap.echoCombMethod );
-fprintf(fid,'algorParam.unwrap.isEddyCorrect = ''%i'' ;\n', ...
-    algorParams.unwrap.isEddyCorrect );
-fprintf(fid,'algorParam.unwrap.excludeMaskThreshold = ''%s'' ;\n', ...
-    algorParams.unwrap.excludeMaskThreshold );
+unwrap_fieldnames = fieldnames( algorParams.unwrap );
+for i = 1:size( struct2table( algorParams.unwrap ), 2 )
+    current_value = algorParams.unwrap.( unwrap_fieldnames{ i } );
+    if isnumeric( current_value )
+        fprintf( fid, '%s = %d \n', unwrap_fieldnames{ i }, current_value );
+    else
+        fprintf( fid, '%s = %s \n', unwrap_fieldnames{ i }, current_value );
+    end
+end
 
 % Background field removal parameters
 fprintf(fid,'%% Background field removal algorithm parameters\n');
-fprintf(fid,'algorParam.bfr.method = ''%s'' ;\n', ...
-    algorParams.bfr.method);
-fprintf(fid,'algorParam.bfr.refine = %i ;\n', ...
-    algorParams.bfr.refine);
-% Erode local field
-fprintf(fid,'algorParam.bfr.erode_radius = %i ;\n', ...
-    algorParams.bfr.erode_radius);
 
-fprintf(fid,'algorParam.bfr.radius = %i ;\n', ...
-    algorParams.bfr.radius);
-fprintf(fid,'algorParam.bfr.lambda = %i ;\n', ...
-    algorParams.bfr.alpha);
+BFR_fieldnames = fieldnames( algorParams.bfr );
+for i = 1:size( struct2table( algorParams.bfr ), 2 )
+    current_value = algorParams.bfr.( BFR_fieldnames{ i } );
+    if isnumeric( current_value )
+        fprintf( fid, '%s = %d \n', BFR_fieldnames{ i }, current_value );
+    else
+        fprintf( fid, '%s = %s \n', BFR_fieldnames{ i }, current_value );
+    end
+end
 
 % QSM parameters
 fprintf(fid,'%% QSM algorithm parameters\n');
