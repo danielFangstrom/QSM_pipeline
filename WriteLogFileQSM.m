@@ -73,9 +73,9 @@ QSM_fieldnames = fieldnames( algorParams.qsm );
 for i = 1:size( struct2table( algorParams.qsm  ), 2 )
     current_value = algorParams.qsm.( QSM_fieldnames{ i } );
     if isnumeric( current_value )
-        fprintf( fid, '%s = %d', QSM_fieldnames{ i }, current_value );
+        fprintf( fid, '%s = %d \n', QSM_fieldnames{ i }, current_value );
     else
-        fprintf( fid, '%s = %s', QSM_fieldnames{ i }, current_value );
+        fprintf( fid, '%s = %s \n', QSM_fieldnames{ i }, current_value );
     end
 end
 
