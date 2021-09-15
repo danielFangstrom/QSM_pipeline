@@ -41,7 +41,7 @@ fprintf(fid,'mask_filename = [''%s''] ;\n\n',mask_name);
 fprintf(fid,'subject_output_dir = [''%s''] ;\n\n',subject_output_dir);
 
 % Phase unwrapping parameters
-fprintf(fid,'%% Phase unwrapping algorithm parameters\n');
+fprintf(fid,'%%\n\n Phase unwrapping algorithm parameters\n');
 
 unwrap_fieldnames = fieldnames( algorParams.unwrap );
 for i = 1:size( struct2table( algorParams.unwrap ), 2 )
@@ -54,7 +54,7 @@ for i = 1:size( struct2table( algorParams.unwrap ), 2 )
 end
 
 % Background field removal parameters
-fprintf(fid,'%% Background field removal algorithm parameters\n');
+fprintf(fid,'%%\n\n Background field removal algorithm parameters\n');
 
 BFR_fieldnames = fieldnames( algorParams.bfr );
 for i = 1:size( struct2table( algorParams.bfr ), 2 )
@@ -67,7 +67,7 @@ for i = 1:size( struct2table( algorParams.bfr ), 2 )
 end
 
 % QSM parameters
-fprintf(fid,'%% QSM algorithm parameters\n');
+fprintf(fid,'%%\n\n QSM algorithm parameters\n');
 
 QSM_fieldnames = fieldnames( algorParams.qsm );
 for i = 1:size( struct2table( algorParams.qsm  ), 2 )
