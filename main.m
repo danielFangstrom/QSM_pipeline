@@ -15,15 +15,19 @@ cd( QSM_dir )
 % sepia_addpath('bet');
 % call_fsl_dir = '/afs/cbs.mpg.de/software/fsl/6.0.3/ubuntu-bionic-amd64/etc/matlab/';
 
-subject_list = [40];
+subject_list = [045];
+% [1:4, 6:8, 11:23, 25:34, 36, 38, 39, 42:46, 48:50, 101, 103:109, ...
+%       111:113, 115:116, 118:122, 124, 127, 129:133, 135:139, 141:146, 148, 149];
 
 % iterations_of_parameters = 5;
 
-lambda_values = [0.08];
+lambda_values = [0.08]; %[0.008, 0.03, 0.05, 0.06, 0.1, 0.12, 0.15];
 
-tolerance_values = [0.00000000001]; %[0.001, 0.0001, 0.0005, 0.01];
+tolerance_values = [0.0001]; %[0.001, 0.0001, 0.0005, 0.01];
 
 QSM_method = 'ilsqr';
+
+%maxiter = 2500;
 
 % Loads the preset parameters of the selected variable into the workspace
 % (as the variable 'qsm_params')
@@ -44,12 +48,14 @@ for isub = 1:length( subject_list )
 
     % Select certain files from the directory
     subject = subject_list( isub );
-    output_dir = strcat( output_main_dir, sprintf( '%03d', subject ), '_UNI_DEN_05/' );
+    fprintf( 'Processing subject %i\n', subject);
+    output_dir = strcat( output_main_dir, sprintf( '%03d', subject ), '_preproc_brain_phase_05/' );
 
     sub_dir = sprintf([data_dir, 'sub-%s', '/ses-1/other/'], sprintf( '%03d', subject ));
     sub_anat_dir = sprintf([data_dir, 'sub-%s', '/ses-1/anat/'], sprintf( '%03d', subject ));
-    sub_phase_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_INV2_PHS*', '00005*', 'nii'] ) );
-    sub_magn_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_UNI_DEN*', '00005*', 'nii'] ) ); %dir( fullfile( sub_anat_dir, ['*T1w*', 'nii'] ) ); %
+    sub_phase_file = dir( fullfile( sub_dir, ['memp2rage_wip900D_INV2_PHS*', '_00005*', 'nii'] ) );
+    sub_magn_file = dir( fullfile( strcat( output_main_dir, 'Masks/Masks_from_preproc/' ) , ...
+        [ sprintf( '%03d', subject ), '.nii' ] ) ); %dir( fullfile( sub_dir, ['memp2rage_wip900D_UNI_DEN*', '_00005*', 'nii'] ) ); %dir( fullfile( sub_anat_dir, ['*T1w*', 'nii'] ) ); %
 
     % Select the sepia header
     sepia_header = fullfile( QSM_dir, 'sepia_header.mat' );  %'sub_050_INV2_5_BET_mask/sepia_header.mat');
@@ -62,8 +68,8 @@ for isub = 1:length( subject_list )
     % If there are too many funky ones, consider creating a mask for each
     % participant. Dynamically creating a good mask for each participant is
     % most likely too much work.
-    sub_mask_file = dir( fullfile( strcat( output_main_dir, 'Masks/' ) , ...
-        ['*', sprintf( '%03d', subject ), '*mask.nii.gz'] ) );
+    sub_mask_file = dir( fullfile( strcat( output_main_dir, 'Masks/Masks_from_preproc/' ) , ...
+        [ sprintf( '%03d', subject ), '*mask.nii.gz' ] ) );
     
     mask = strcat( sub_mask_file.folder, '/', sub_mask_file.name);
     
@@ -78,7 +84,7 @@ for isub = 1:length( subject_list )
             % @todo find all variables that relate to a changed parameter
             % value and use the names and values of those (in each loop) to
             % dynamically create a descriptive folder name.
-            sublevel_output_dir = strcat( output_dir, QSM_method, '_lambda', ...
+            sublevel_output_dir = strcat( output_dir, 'resharp_alpha_021_radius_4_', QSM_method, '__lambda', ...
                 sprintf( '%03d', lambda ), '_tol_', sprintf( '%05d', tol ), '/' );
 
             % Initialize the algorithm parameters
@@ -93,12 +99,16 @@ for isub = 1:length( subject_list )
                 'isEddyCorrect', 0,...
                 'excludeMaskThreshold', Inf...
                 );
+%             background_field_removal_params = struct(...
+%                 'method', 'iharperella',...
+%                 'iteration', 500 ...
+%                 );
             background_field_removal_params = struct(...
                 'refine', 1,...
                 'erode_radius', 0,...
                 'method', 'resharp',...
                 'radius', 4,...
-                'alpha', 0.01 ...
+                'alpha', 0.21 ...
                 );
             % In this block, 'lambda' and 'tolerance' changes values for
             % each loop and are thus replacing the default values, but one
