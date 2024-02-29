@@ -17,7 +17,7 @@ if exist(log_file_name,'file') == 2
 end
 fid = fopen(log_file_name,'w');
 
-% Print the error if there was one
+% Print the error if
 if isfield( algorParams, 'error' )
     fprintf( fid, 'The script encountered an error: ''%s'' in %s line %d;\n\n\n', ...
         algorParams.error.message, algorParams.error.stack(1,1).name, algorParams.error.stack(1,1).line);

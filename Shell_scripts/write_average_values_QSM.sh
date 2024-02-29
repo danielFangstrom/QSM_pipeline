@@ -1,0 +1,31 @@
+root_dir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/group_analysis/Deaveraged_images/Current/No_nans_not_deaveraged/'
+maskRootDir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/QSM_segmentation/CAT12_segmentations'
+outDir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/group_analysis/Deaveraged_images/'
+
+
+subject_list=(001 002 003 004 006 007 008 011 012 013 014 015 016 017 018 019 020 021 022 023 025 026 027 028 029 \
+030 031 032 033 034 036 038 039 040 042 043 044 045 046 048 049 050 101 103 104 105 106 107 111 112 113 115 116 117 \
+118 119 120 121 122 124 127 130 132 133 135 136 137 138 139 140 141 142 143 144 145 146 148 149)
+#subject_list=(112)
+
+length_subject_list=${#subject_list[@]}
+
+filename_average_values="average_values_QSM_files.txt"
+
+touch "${filename_average_values}"
+
+for (( j=0; j<${length_subject_list}; j++ )) ;
+do
+    outputID=${subject_list[$j]}
+    echo "Creating images for $outputID"
+    QSM_img="$root_dir/${outputID}_QSM_no_nans.nii"
+    echo "Current QSM file is "$QSM_img
+    
+    # Get the average value (image mean)
+    refValue=`fslmeants -i $QSM_img  | awk '{ print $1 }'`
+    
+    # Print the average value and the participant number
+    printf '%s\t%s\n' $refValue $outputID >> $filename_average_values
+    echo "Done."
+    
+done
