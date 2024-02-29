@@ -1,7 +1,6 @@
-#root_dir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/output/'
-root_dir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/group_analysis/Deaveraged_images'
-maskRootDir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/QSM_segmentation/CAT12_segmentations'
-outDir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/QSM_segmentation/'
+root_dir='/data/pt_01923/TmpOut/QSM/QSM_pipeline/group_analysis/Deaveraged_images'
+maskRootDir='/data/pt_01923/TmpOut/QSM/QSM_pipeline/QSM_segmentation/CAT12_segmentations'
+outDir='/data/pt_01923/TmpOut/QSM/QSM_pipeline/QSM_segmentation/'
 
 fsl_dir='/afs/cbs.mpg.de/software/fsl/currentversion.ubuntu-bionic-amd64/ubuntu-bionic-amd64/bin'
 

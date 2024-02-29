@@ -1,6 +1,6 @@
-root_dir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/QSM_segmentation/CAT12_segmentation_deformation_7th_spline'
-maskRootDir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/QSM_segmentation/CAT12_segmentations'
-outDir='/data/pt_01923/TmpOut/QSM/for_debugging_pipeline/QSM_segmentation/'
+root_dir='/data/pt_01923/TmpOut/QSM/QSM_pipeline/QSM_segmentation/CAT12_segmentation_deformation_7th_spline'
+maskRootDir='/data/pt_01923/TmpOut/QSM/QSM_pipeline/QSM_segmentation/CAT12_segmentations'
+outDir='/data/pt_01923/TmpOut/QSM/QSM_pipeline/QSM_segmentation/'
 
 
 subject_list=(001 002 003 004 006 007 008 011 012 013 014 015 016 017 018 019 020 021 022 023 025 026 027 028 029 \
