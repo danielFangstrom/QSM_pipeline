@@ -14,6 +14,7 @@ for (( j=0; j<${length_subject_list}; j++ )) ;
 do
     outputID=${subject_list[$j]}
     echo "Creating images for $outputID"
+    # Find the registered QSM image corresponding to the current subject
     QSM_img="${root_dir}/${outputID}/wsepia_QSM.nii"
     echo "Current QSM file is "$QSM_img
     
